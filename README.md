@@ -41,13 +41,16 @@ app/
   [lang]/layout.tsx  Layout raíz por idioma: <html lang>, fuentes (Bricolage para titulares, Geist para texto, DM Mono para etiquetas), metadata SEO y hreflang
   [lang]/page.tsx    Orden de las secciones
   globals.css        Tokens, vidrio, hero, secciones, footer, responsive y reduced-motion
-  icon.svg           Favicon
+  icon.svg           Favicon vectorial
+  favicon.ico        Favicon clásico
+  apple-icon.png     Ícono para iOS
+  manifest.ts        Web manifest (íconos de Android)
 middleware.ts        Redirección de "/" según el idioma del navegador
 components/
   Background.tsx     Ambiente fijo con orbes de color (parallax)
   Nav.tsx            Navegación flotante de vidrio + selector de idioma
   LangSwitch.tsx     Selector EN / ES
-  Hero.tsx           Portal de gradiente que se abre con el scroll
+  Hero.tsx           Portal de gradiente que se abre con el scroll + 16 formas que orbitan alrededor en 3 capas de profundidad
   Statement.tsx      Card de posicionamiento: marco de gradiente, vidrio transparente, texto que se enciende y mini sistema
   SystemStory.tsx    Sección fijada: las 5 etapas cambian con el scroll
   Milestones.tsx     Hitos con conteo al entrar en pantalla
@@ -59,6 +62,8 @@ lib/
   content.ts         ← TODO el contenido, en EN y ES
   motion.ts          Helpers de scroll y movimiento reducido
 public/cv/           PDFs descargables del CV (EN y ES)
+public/og/           Imágenes para compartir en redes (EN y ES)
+public/icons/        Íconos 192 y 512 px
 scripts/check-cv.mjs
 ```
 
@@ -66,12 +71,28 @@ scripts/check-cv.mjs
 
 Todo está en `lib/content.ts`, separado por idioma (`en` / `es`): textos de la interfaz, etapas, roles y bullets, hitos y la frase principal. Si cambiás un texto en un idioma, actualizá también el otro.
 
+Criterio para el español: **"brand" y "growth" no se traducen** (nada de "marca" ni "crecimiento"/"crecer"). Para chequearlo, corré `grep -niE "marca|crecim|crecer" lib/content.ts`, que no tiene que devolver nada.
+
 ## CV descargable
 
 - `public/cv/Geronimo-Diaz-De-Rosa-CV-EN.pdf`
 - `public/cv/Geronimo-Diaz-De-Rosa-CV-ES.pdf`
 
 En `/en`, "Download CV" baja el PDF en inglés; en `/es`, "Descargar CV" baja el PDF en español. El footer tiene los dos. Usá **esos nombres exactos**, porque Vercel distingue mayúsculas y minúsculas. Para chequearlo, corré `npm run check:cv`.
+
+## Imágenes para redes y favicons
+
+| Archivo | Uso |
+|---------|-----|
+| `public/og/og-en.png`, `public/og/og-es.png` | Imagen al compartir el link (1200×630): LinkedIn, WhatsApp, X, Slack. Hay una por idioma |
+| `app/icon.svg` | Favicon vectorial para navegadores modernos |
+| `app/favicon.ico` | Favicon clásico (16, 32 y 48 px) |
+| `app/apple-icon.png` | Ícono de iPhone/iPad al agregarlo a la pantalla de inicio (180 px) |
+| `public/icons/icon-192.png`, `icon-512.png` + `app/manifest.ts` | Íconos de Android / PWA |
+
+Todos siguen el diseño del sitio: el portal de gradiente, las formas grises con profundidad y el rombo blanco de "Position".
+
+Para probar cómo se ve el link, después del deploy pegá la URL en [LinkedIn Post Inspector](https://www.linkedin.com/post-inspector/) o en https://www.opengraph.xyz/. Las redes guardan la imagen en caché: si la cambiás, el Post Inspector fuerza la actualización en LinkedIn.
 
 ## Deploy en Vercel
 
