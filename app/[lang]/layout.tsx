@@ -31,6 +31,7 @@ const META = {
     description:
       "I position B2B brands, create the content that earns them a place in the market and build the system that makes them grow: brand, content, GTM, web, AI and data.",
     ogTitle: "Gerónimo Díaz De Rosa — From brand to growth",
+    ogAlt: "From brand to growth. One system. Position, Create, Grow, Build, Automate.",
     locale: "en_US",
   },
   es: {
@@ -38,6 +39,7 @@ const META = {
     description:
       "Posiciono brands B2B, creo el contenido que les gana un lugar en el mercado y construyo el sistema de growth que las impulsa: brand, contenido, GTM, web, IA y datos.",
     ogTitle: "Gerónimo Díaz De Rosa — De brand a growth",
+    ogAlt: "De brand a growth. Un solo sistema. Posicionamiento, Contenido, Growth, Producto, Automatización.",
     locale: "es_AR",
   },
 } as const;
@@ -57,12 +59,23 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const { lang } = await params;
   if (!isLang(lang)) return {};
   const m = META[lang];
+  const image = { url: `/og/og-${lang}.png`, width: 1200, height: 630, alt: m.ogAlt };
   return {
     metadataBase: new URL(SITE_URL),
     title: m.title,
     description: m.description,
-    alternates: { languages: { en: "/en", es: "/es", "x-default": "/en" } },
-    openGraph: { title: m.ogTitle, description: m.description, type: "website", locale: m.locale },
+    alternates: { canonical: `/${lang}`, languages: { en: "/en", es: "/es", "x-default": "/en" } },
+    openGraph: {
+      title: m.ogTitle,
+      description: m.description,
+      type: "website",
+      url: `/${lang}`,
+      siteName: "Gerónimo Díaz De Rosa",
+      locale: m.locale,
+      alternateLocale: lang === "en" ? ["es_AR"] : ["en_US"],
+      images: [image],
+    },
+    twitter: { card: "summary_large_image", title: m.ogTitle, description: m.description, images: [image.url] },
   };
 }
 
