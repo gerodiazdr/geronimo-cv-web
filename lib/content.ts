@@ -119,6 +119,7 @@ export type Content = {
   milestones: Milestone[];
 };
 
+// Spanish copy keeps "brand" and "growth" in English on purpose (industry vocabulary).
 const UI: Record<Lang, UIStrings> = {
   "en": {
     "langName": "English",
@@ -187,12 +188,12 @@ const UI: Record<Lang, UIStrings> = {
       "download": "Descargar CV"
     },
     "hero": {
-      "pill": "Head of Marketing & Sales · Marca y crecimiento",
-      "lead": "Posiciono marcas B2B, les doy un lugar en el mercado y construyo el sistema que las hace crecer.",
+      "pill": "Head of Marketing & Sales · Brand & Growth",
+      "lead": "Posiciono brands B2B, les doy un lugar en el mercado y construyo el sistema de growth que las impulsa.",
       "email": "Escribime",
       "download": "Descargar CV",
-      "kicker": "Posicionar · Crear · Crecer · Construir · Automatizar",
-      "inner1": "De la marca al crecimiento.",
+      "kicker": "Posicionamiento · Contenido · Growth · Producto · Automatización",
+      "inner1": "De brand a growth.",
       "inner2": "Un solo sistema.",
       "cue": "Deslizá para entrar"
     },
@@ -201,7 +202,7 @@ const UI: Record<Lang, UIStrings> = {
       "system": "El sistema"
     },
     "story": {
-      "title": "De la marca al crecimiento",
+      "title": "De brand a growth",
       "usedAt": "Lo apliqué en",
       "tools": "herramientas"
     },
@@ -225,7 +226,7 @@ const UI: Record<Lang, UIStrings> = {
       "location": "Buenos Aires · Remoto"
     },
     "footer": {
-      "tagline": "Marca, contenido y crecimiento, construidos como un solo sistema.",
+      "tagline": "Brand, contenido y growth, construidos como un solo sistema.",
       "navigate": "Navegar",
       "contact": "Contacto",
       "cv": "CV",
@@ -320,25 +321,25 @@ const STAGES: Record<Lang, Stage[]> = {
   {
     "id": "position",
     "n": "01",
-    "verb": "Posicionar",
-    "name": "Marca y posicionamiento",
+    "verb": "Posicionamiento",
+    "name": "Brand y posicionamiento",
     "shape": "diamond",
-    "desc": "Definir qué representa la marca y el espacio que ocupa en el mercado.",
+    "desc": "Definir qué representa el brand y el espacio que ocupa en el mercado.",
     "tools": [
-      "Estrategia de marca",
+      "Brand strategy",
       "Posicionamiento y mensajes",
       "Investigación de mercado y competencia",
       "Propuesta de valor",
-      "Identidad de marca (Figma, Adobe)"
+      "Brand identity (Figma, Adobe)"
     ]
   },
   {
     "id": "create",
     "n": "02",
-    "verb": "Crear",
+    "verb": "Contenido",
     "name": "Contenido y storytelling",
     "shape": "quarter",
-    "desc": "Crear el contenido que gana atención y mantiene a la marca en la conversación.",
+    "desc": "Crear el contenido que gana atención y mantiene al brand en la conversación.",
     "tools": [
       "Estrategia de contenido",
       "Redes sociales y comunidad",
@@ -350,7 +351,7 @@ const STAGES: Record<Lang, Stage[]> = {
   {
     "id": "grow",
     "n": "03",
-    "verb": "Crecer",
+    "verb": "Growth",
     "name": "Growth y GTM",
     "shape": "tri",
     "desc": "Llevar el producto al mercado, abrir canales y llenar el pipeline.",
@@ -365,7 +366,7 @@ const STAGES: Record<Lang, Stage[]> = {
   {
     "id": "build",
     "n": "04",
-    "verb": "Construir",
+    "verb": "Producto",
     "name": "Web y producto",
     "shape": "sq",
     "desc": "Diseñar y lanzar los productos web sobre los que corre el funnel.",
@@ -380,7 +381,7 @@ const STAGES: Record<Lang, Stage[]> = {
   {
     "id": "automate",
     "n": "05",
-    "verb": "Automatizar",
+    "verb": "Automatización",
     "name": "IA, datos y CRM",
     "shape": "circ",
     "desc": "Automatizar el trabajo repetitivo con IA y medir lo que realmente mueve los ingresos.",
@@ -658,9 +659,9 @@ const ROLES: Record<Lang, Role[]> = {
       "grow"
     ],
     "bullets": [
-      "Lideré el lanzamiento del hotel desde cero: adquisición digital y crecimiento orgánico.",
-      "Hice crecer la comunidad de 0 a 40K+ seguidores orgánicos en 3 años con contenido estratégico.",
-      "Armé alianzas de co-branding, eventos y activaciones con marcas locales."
+      "Lideré el lanzamiento del hotel desde cero: adquisición digital y growth orgánico.",
+      "Llevé la comunidad de 0 a 40K+ seguidores orgánicos en 3 años con contenido estratégico.",
+      "Armé alianzas de co-branding, eventos y activaciones con brands locales."
     ]
   }
 ],
@@ -668,7 +669,7 @@ const ROLES: Record<Lang, Role[]> = {
 
 const STATEMENT: Record<Lang, string> = {
   "en": "I position brands, create the content that earns them a place in the market, and build the system that makes them grow.",
-  "es": "Posiciono marcas, creo el contenido que les gana un lugar en el mercado y construyo el sistema que las hace crecer."
+  "es": "Posiciono brands, creo el contenido que les gana un lugar en el mercado y construyo el sistema de growth que las impulsa."
 };
 
 const MILESTONES: Record<Lang, Milestone[]> = {

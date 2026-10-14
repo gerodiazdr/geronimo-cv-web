@@ -34,10 +34,10 @@ const META = {
     locale: "en_US",
   },
   es: {
-    title: "Gerónimo Díaz De Rosa — Head of Marketing & Sales, marca y crecimiento",
+    title: "Gerónimo Díaz De Rosa — Head of Marketing & Sales, Brand & Growth",
     description:
-      "Posiciono marcas B2B, creo el contenido que les gana un lugar en el mercado y construyo el sistema que las hace crecer: marca, contenido, GTM, web, IA y datos.",
-    ogTitle: "Gerónimo Díaz De Rosa — De la marca al crecimiento",
+      "Posiciono brands B2B, creo el contenido que les gana un lugar en el mercado y construyo el sistema de growth que las impulsa: brand, contenido, GTM, web, IA y datos.",
+    ogTitle: "Gerónimo Díaz De Rosa — De brand a growth",
     locale: "es_AR",
   },
 } as const;
