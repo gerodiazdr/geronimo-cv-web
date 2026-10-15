@@ -1,112 +1,77 @@
-# geronimo-cv-web
+# Gerónimo Díaz De Rosa — sitio CV (v5)
 
-Sitio CV de Gerónimo Díaz De Rosa, en inglés y español. Está hecho con Next.js (App Router) + TypeScript, sin librerías de UI ni de animación: todo el movimiento es CSS + `requestAnimationFrame`.
-
-**Recorrido:**
-1. Hero blanco con un portal de gradiente.
-2. Al scrollear, el portal se abre y te sumerge en el color ("From brand to growth. One system.").
-3. Card de posicionamiento.
-4. Sistema Position / Create / Grow / Build / Automate, fijado al scroll.
-5. Hitos.
-6. Experiencia en cartas apiladas.
-7. Contacto.
-8. Footer con el círculo de gradiente animado y las formas orbitando.
-
-## Idiomas
-
-| Ruta | Contenido |
-|------|-----------|
-| `/en` | Inglés |
-| `/es` | Español |
-| `/`   | Redirige según el idioma del navegador: español → `/es`, el resto → `/en` (`middleware.ts`) |
-
-El selector EN / ES está en el header y en el footer. Cada idioma tiene su propia URL, así que se puede compartir directo y Google indexa las dos versiones (`hreflang` incluido).
-
-## Correr en local
-
-```bash
-npm install
-npm run dev          # http://localhost:3000 → redirige a /en o /es
-npm run typecheck    # chequeo de tipos
-npm run check:cv     # verifica que estén los PDFs del CV
-npm run build        # build de producción
-```
-
-Requiere Node 20 o superior.
+Sitio personal bilingüe (`/en` y `/es`) hecho con Next.js. Es estático: no tiene base de datos ni servidor propio.
 
 ## Estructura
 
 ```
-app/
-  [lang]/layout.tsx  Layout raíz por idioma: <html lang>, fuentes (Bricolage para titulares, Geist para texto, DM Mono para etiquetas), metadata SEO y hreflang
-  [lang]/page.tsx    Orden de las secciones
-  globals.css        Tokens, vidrio, hero, secciones, footer, responsive y reduced-motion
-  icon.svg           Favicon vectorial
-  favicon.ico        Favicon clásico
-  apple-icon.png     Ícono para iOS
-  manifest.ts        Web manifest (íconos de Android)
-middleware.ts        Redirección de "/" según el idioma del navegador
-components/
-  Background.tsx     Ambiente fijo con orbes de color (parallax)
-  Nav.tsx            Navegación flotante de vidrio + selector de idioma
-  LangSwitch.tsx     Selector EN / ES
-  Hero.tsx           Portal de gradiente que se abre con el scroll + 16 formas que orbitan alrededor en 3 capas de profundidad
-  Statement.tsx      Card de posicionamiento: marco de gradiente, vidrio transparente, texto que se enciende y mini sistema
-  SystemStory.tsx    Sección fijada: las 5 etapas cambian con el scroll
-  Milestones.tsx     Hitos con conteo al entrar en pantalla
-  Experience.tsx     Cartas apiladas (sticky) + roles anteriores
-  Contact.tsx        mailto, copiar email, descargas del CV
-  Footer.tsx         Círculo de gradiente animado, formas en órbita y links
-  Shape.tsx          Formas de cada etapa (rombo, cuarto de círculo, triángulo, cuadrado, círculo)
-lib/
-  content.ts         ← TODO el contenido, en EN y ES
-  motion.ts          Helpers de scroll y movimiento reducido
-public/cv/           PDFs descargables del CV (EN y ES)
-public/og/           Imágenes para compartir en redes (EN y ES)
-public/icons/        Íconos 192 y 512 px
-scripts/check-cv.mjs
+app/[lang]/layout.tsx   — fuentes, SEO, hreflang e imágenes para compartir por idioma
+app/[lang]/page.tsx     — orden de las secciones
+app/globals.css         — todo el diseño: paleta, vidrio, secciones y layouts de celular
+middleware.ts           — "/" redirige a /es o /en según el idioma del navegador
+lib/content.ts          — TODO el texto y los datos, en inglés y español
+lib/engine.js           — motor de animación (JS puro, sin librerías)
+components/             — una pieza por sección (Hero, SystemStory, Results, Work, AiFlow, Experience, Exit…)
+public/cv/              — los dos PDFs del CV
+public/og/              — imágenes para compartir (og-en.png, og-es.png)
 ```
 
 ## Editar contenido
 
-Todo está en `lib/content.ts`, separado por idioma (`en` / `es`): textos de la interfaz, etapas, roles y bullets, hitos y la frase principal. Si cambiás un texto en un idioma, actualizá también el otro.
+Todo el texto está en `lib/content.ts`, con un bloque `en` y otro `es` para cada parte:
+- `METRICS`: los números del funnel.
+- `CASES`: los dos casos.
+- `AI`: la demo del workflow.
+- `ROLES`: la experiencia.
 
-Criterio para el español: **"brand" y "growth" no se traducen** (nada de "marca" ni "crecimiento"/"crecer"). Para chequearlo, corré `grep -niE "marca|crecim|crecer" lib/content.ts`, que no tiene que devolver nada.
+En español, "brand" y "growth" quedan en inglés a propósito: no uses "marca", "crecimiento" ni "crecer".
 
-## CV descargable
+**Métricas:** cada número tiene que poder explicarse en una entrevista (de dónde sale, período y cómo se mide). "Pipeline" es el valor de oportunidades calificadas, no ingresos cerrados.
 
-- `public/cv/Geronimo-Diaz-De-Rosa-CV-EN.pdf`
-- `public/cv/Geronimo-Diaz-De-Rosa-CV-ES.pdf`
+## Recorrido del sitio
 
-En `/en`, "Download CV" baja el PDF en inglés; en `/es`, "Descargar CV" baja el PDF en español. El footer tiene los dos. Usá **esos nombres exactos**, porque Vercel distingue mayúsculas y minúsculas. Para chequearlo, corré `npm run check:cv`.
+1. **Hero:** el portal se abre al scrollear y te mete en el color. Las cinco formas de las etapas se alinean dentro del color, el portal se cierra en un punto, y el punto y las formas viajan hasta la sección del sistema. Ahí el punto pasa a ser el indicador de progreso y cada forma el ícono de su etapa.
+2. **Qué hago:** frase que se ilumina palabra por palabra, más datos prácticos (base y zona horaria, idiomas, qué roles busco).
+3. **Sistema (fijado):** las 5 etapas avanzan con el scroll. En celular son tarjetas que se apilan; la de abajo se achica y se desvanece.
+4. **Resultados:** funnel de Brand → Revenue con formas que caen y métricas que cuentan hacia arriba.
+5. **Casos:** tarjetas con ilustraciones propias (timeline de producto y dos plataformas web) que se abren a pantalla completa.
+6. **Demo de IA:** nodos que se encienden en secuencia, un pulso que viaja entre ellos y un registro de ejemplo.
+7. **Experiencia:** timeline que se dibuja con el scroll. Ingenii (productos) y Tekne (servicios), del mismo grupo, van en carriles paralelos.
+8. **Salida por el portal:** el círculo vuelve a crecer y el contacto queda adentro.
 
-## Imágenes para redes y favicons
+**Extras:**
+- Scroll suave con inercia (escritorio, rueda del mouse).
+- Las formas del hero se apartan del cursor y, en celular, se mueven al inclinar el teléfono (iPhone pide permiso al primer toque).
+- Las formas se estiran levemente según la velocidad del scroll.
+- Las órbitas se pausan fuera de pantalla.
 
-| Archivo | Uso |
-|---------|-----|
-| `public/og/og-en.png`, `public/og/og-es.png` | Imagen al compartir el link (1200×630): LinkedIn, WhatsApp, X, Slack. Hay una por idioma |
-| `app/icon.svg` | Favicon vectorial para navegadores modernos |
-| `app/favicon.ico` | Favicon clásico (16, 32 y 48 px) |
-| `app/apple-icon.png` | Ícono de iPhone/iPad al agregarlo a la pantalla de inicio (180 px) |
-| `public/icons/icon-192.png`, `icon-512.png` + `app/manifest.ts` | Íconos de Android / PWA |
+**Accesibilidad:**
+- Con "reducir movimiento" no hay animaciones, scroll suave ni apilado, y todo se muestra estático.
+- Con "reducir transparencia", el vidrio se vuelve sólido.
 
-Todos siguen el diseño del sitio: el portal de gradiente, las formas grises con profundidad y el rombo blanco de "Position".
+## Ajustes rápidos del motor (`lib/engine.js`)
 
-Para probar cómo se ve el link, después del deploy pegá la URL en [LinkedIn Post Inspector](https://www.linkedin.com/post-inspector/) o en https://www.opengraph.xyz/. Las redes guardan la imagen en caché: si la cambiás, el Post Inspector fuerza la actualización en LinkedIn.
+- **Suavidad del scroll:** `current = lerp(current, target, 0.11)`. Más alto es más directo. Si con trackpad se siente lento, probá `0.2`.
+- **Desactivar el scroll suave:** cambiá `const useSmooth = fine && !reduce;` por `const useSmooth = false;`.
+- **Duración de las escenas fijadas:** es la altura de cada sección en `globals.css` (`.g-hero` 2700px, `.g-story` 2800px, `.g-funnel` 2200px, `.g-ai` 2300px, `.g-exit` 1500px).
 
-## Deploy en Vercel
+## CVs en PDF
 
-1. En Vercel, entrá a **Add New → Project** e importá este repo de GitHub.
-2. Next.js se detecta solo; no hace falta configurar nada.
-3. Opcional: cuando tengas dominio propio, agregá la variable de entorno `NEXT_PUBLIC_SITE_URL=https://tudominio.com` para que los links de SEO usen ese dominio. Si no la definís, se usa la URL de producción de Vercel.
+Van en `public/cv/` con estos nombres exactos (Vercel distingue mayúsculas):
+- `Geronimo-Diaz-De-Rosa-CV-EN.pdf`
+- `Geronimo-Diaz-De-Rosa-CV-ES.pdf`
 
-## Notas
+`npm run check:cv` falla si falta alguno.
 
-- **Movimiento reducido:** con "reducir movimiento" activado no hay zoom, órbitas ni manchas animadas; solo fundidos.
-- **Transparencia reducida:** con "reducir transparencia" activado, el vidrio pasa a fondo sólido.
-- **Celular** (hasta 760 px de ancho):
-  - El header queda en una sola fila: "Gerónimo", EN/ES y un botón "CV".
-  - El portal es un círculo más ancho que la pantalla, con las formas orbitando arriba y abajo. Se oculta la capa más lejana para que ande fluido.
-  - El sistema se muestra como tarjetas que se apilan al scrollear: la siguiente sube y tapa a la anterior, que se achica y se desvanece. La forma de cada tarjeta gira y crece a medida que la tarjeta entra. Con "reducir movimiento" activado queda como una lista común.
-  - El footer pasa a 2 columnas.
-- **Notebooks bajas** (hasta 820 px de alto): la escena del sistema se compacta para que la tarjeta entre completa.
+## Comandos
+
+```bash
+npm install
+npm run dev        # http://localhost:3000
+npm run check:cv   # verifica los PDFs
+npm run build      # build de producción (estático)
+```
+
+## Dominio y SEO
+
+Si usás un dominio propio, cargá `NEXT_PUBLIC_SITE_URL=https://tudominio.com` en las variables de entorno de Vercel. Las imágenes para compartir están en `public/og/`. Después de cada cambio, pasá las URLs por el LinkedIn Post Inspector para refrescar la vista previa.
