@@ -109,7 +109,10 @@ html.g-lock,html.g-lock body{overflow:hidden}
 .g-story{--ps:0;position:relative;height:2800px}
 .g-story__sticky{position:sticky;top:0;height:var(--pin-h);overflow:hidden}
 .g-story__inner{max-width:1200px;height:100%;margin:0 auto;padding:96px 24px 32px;display:flex;gap:48px;align-items:center}
-.g-story__index{flex:1 1 320px;display:flex;gap:26px;min-width:0}
+/* The stage names are short in English but long in Spanish ("Posicionamiento",
+   "Automatizacion"). Size this column to its content so a long name widens it instead of
+   spilling under the panel; English keeps its 320px basis because its content is narrower. */
+.g-story__index{flex:1 1 320px;display:flex;gap:26px;min-width:max-content}
 .g-track{position:relative;width:4px;align-self:stretch;border-radius:4px;background:rgba(18,18,18,.12)}
 .g-fill{position:absolute;left:0;top:0;width:4px;height:calc(var(--ps)*100%);border-radius:4px;background:linear-gradient(180deg,#FFA071,#FF5E8A,#E0338E)}
 .g-story__list{display:flex;flex-direction:column;gap:14px}
@@ -248,7 +251,7 @@ html.g-lock,html.g-lock body{overflow:hidden}
 .g-statement{padding:96px 14px 48px}.g-frame{padding:10px;border-radius:26px}
 .g-stmt{grid-template-columns:auto minmax(0,1fr);row-gap:16px;padding:24px 20px}.g-stmt__text{grid-column:1/-1;font-size:28px}
 .g-facts{grid-column:1/-1;border-left:0;padding:16px 0 0;border-top:1px solid rgba(255,255,255,.4)}
-.g-story{height:auto}.g-story__sticky{position:static;height:auto;overflow:visible}.g-story__inner{flex-direction:column;padding:48px 14px}
+.g-story{height:auto}.g-story__sticky{position:static;height:auto;overflow:visible}.g-story__inner{flex-direction:column;padding:48px 14px}.g-story__index{min-width:0}
 .g-track,.g-stages{display:none}.g-story__title{font-size:34px;font-weight:800;letter-spacing:-.04em}
 .g-panels{display:flex;flex-direction:column;gap:16px;width:100%}.g-panel{position:sticky;top:76px;opacity:1;padding:24px 20px;transform-origin:50% 0;background:linear-gradient(135deg,rgba(255,255,255,.93),rgba(255,255,255,.76))}.g-panel__shape{width:64px;height:64px}.g-panel__name{font-size:28px}.g-panel__desc{font-size:17px}
 .g-funnel{height:auto}.g-funnel .g-sticky,.g-ai .g-sticky{position:static;height:auto;overflow:visible}.g-funnel__inner,.g-ai__inner{padding:72px 0 32px}.g-funnel__grid{grid-template-columns:1fr;gap:18px}.g-funnel__box{height:36vh;margin-left:64px}.g-funnel__label{left:-64px;font-size:11px}.g-metrics{gap:10px}.g-metric{padding:14px}.g-metric__num{font-size:34px}.g-metric p{font-size:13px}
