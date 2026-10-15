@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { notFound } from "next/navigation";
 import { Bricolage_Grotesque, DM_Mono, Geist } from "next/font/google";
 import { LANGS, isLang } from "@/lib/content";
@@ -96,7 +97,10 @@ export default async function LangLayout({
   if (!isLang(lang)) notFound();
   return (
     <html lang={lang} className={`${display.variable} ${body.variable} ${mono.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
