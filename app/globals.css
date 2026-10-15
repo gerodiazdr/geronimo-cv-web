@@ -20,6 +20,11 @@
   /* Height of the pinned scroll scenes. Keep in sync with pinHeight() in lib/motion.ts */
   --pin-h: min(100vh, 900px);
 }
+@supports (height: 100svh) {
+  :root {
+    --pin-h: min(100svh, 900px);
+  }
+}
 
 *,
 *::before,
@@ -220,6 +225,7 @@ h3,
 /* ---------- Layout shell ---------- */
 .site {
   position: relative;
+  overflow-x: clip;
 }
 .content {
   position: relative;
@@ -284,6 +290,10 @@ h3,
   justify-content: space-between;
   align-items: center;
   gap: 12px;
+}
+.nav__brand-short,
+.nav__cta-short {
+  display: none;
 }
 .nav__brand {
   font-family: var(--font-body), "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -372,7 +382,7 @@ h3,
   height: 0;
 }
 .orb__x {
-  transform: translateX(calc(var(--R0) * var(--kx) * var(--sx) * 1px));
+  transform: translateX(calc(var(--R0) * var(--kx) * var(--kxm, 1) * var(--sx) * 1px));
   animation: orb-x var(--dur) ease-in-out var(--delay) infinite alternate;
 }
 .orb__y {
@@ -381,10 +391,10 @@ h3,
 }
 .orb__shape {
   position: absolute;
-  left: calc(var(--size) / -2);
-  top: calc(var(--size) / -2);
-  width: var(--size);
-  height: var(--size);
+  left: calc(var(--size) * var(--orb-scale, 1) / -2);
+  top: calc(var(--size) * var(--orb-scale, 1) / -2);
+  width: calc(var(--size) * var(--orb-scale, 1));
+  height: calc(var(--size) * var(--orb-scale, 1));
   animation: orb-spin var(--spin) linear infinite;
   animation-direction: var(--spin-dir);
 }
@@ -401,10 +411,10 @@ h3,
 }
 @keyframes orb-x {
   from {
-    transform: translateX(calc(var(--R0) * var(--kx) * -1px));
+    transform: translateX(calc(var(--R0) * var(--kx) * var(--kxm, 1) * -1px));
   }
   to {
-    transform: translateX(calc(var(--R0) * var(--kx) * 1px));
+    transform: translateX(calc(var(--R0) * var(--kx) * var(--kxm, 1) * 1px));
   }
 }
 @keyframes orb-y {
@@ -1242,23 +1252,90 @@ h3,
 }
 
 @media (max-width: 760px) {
+  /* Nav: one compact row */
+  .nav {
+    top: 10px;
+    width: calc(100% - 20px);
+    padding: 6px 6px 6px 16px;
+    gap: 8px;
+    flex-wrap: nowrap;
+  }
+  .nav__brand-full,
+  .nav__cta-full,
   .nav__links > a:not(.btn) {
     display: none;
   }
-  .footer-scene__panel {
-    grid-template-columns: 1fr;
-    padding: 24px;
+  .nav__brand-short,
+  .nav__cta-short {
+    display: inline;
   }
-  .footer-scene__sun,
-  .footer-scene__orbit {
-    width: 760px;
-    height: 760px;
-    margin-left: -380px;
-    bottom: -400px;
+  .nav__links {
+    gap: 8px;
+    flex-wrap: nowrap;
   }
-  .footer-scene__planet {
-    transform: translate(-50%, -50%) rotate(var(--a)) translateY(-430px) rotate(calc(var(--a) * -1));
+  .nav__cta {
+    min-width: 52px;
   }
+  .lang__opt {
+    min-width: 44px;
+    min-height: 40px;
+  }
+
+  /* Hero: smaller orbits, fewer layers (lighter on phones) */
+  .hero {
+    --kxm: 0.62;
+    --orb-scale: 0.62;
+  }
+  .orb--back {
+    display: none;
+  }
+  .hero__copy {
+    gap: 14px;
+    padding: 72px 20px 24px;
+  }
+  .pill {
+    min-height: 0;
+    padding: 7px 14px;
+    border-radius: 16px;
+    font-size: 12.5px;
+    line-height: 1.3;
+    text-align: center;
+  }
+  .hero__lead {
+    max-width: 28ch;
+  }
+  .hero__inner-kicker {
+    max-width: 30ch;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .hero__cue {
+    left: 20px;
+    bottom: 16px;
+  }
+
+  /* Statement card */
+  .statement {
+    padding: 96px 14px 48px;
+  }
+  .gradient-frame {
+    padding: 10px;
+    border-radius: 26px;
+  }
+  .statement__card {
+    padding: 24px 20px;
+    border-radius: 20px;
+  }
+  .statement__text {
+    font-size: 28px;
+    line-height: 1.1;
+  }
+  .statement__system {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 12px;
+  }
+
+  /* System: stacked cards, no pinned scroll */
   .story {
     height: auto;
   }
@@ -1269,49 +1346,122 @@ h3,
   }
   .story__inner {
     height: auto;
-    padding: 64px 20px;
+    padding: 48px 14px 24px;
+    gap: 20px;
   }
-  .story__track {
+  .story__track,
+  .story__stages {
     display: none;
   }
-  .story__stage.is-active {
-    transform: none;
+  .story__heading {
+    margin: 0;
+    font-size: clamp(32px, 9vw, 40px);
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: -0.04em;
   }
   .story__panels {
-    height: auto;
-    display: grid;
-    gap: 16px;
+    gap: 14px;
   }
   .story__panel {
     grid-area: auto;
-    position: relative;
-    inset: auto;
     opacity: 1;
-    padding: 28px;
+    padding: 24px 20px;
+    gap: 14px;
+    border-radius: 24px;
+  }
+  .story__panel-head {
+    gap: 16px;
+    flex-wrap: nowrap;
+  }
+  .story__shape svg {
+    width: 64px;
+    height: 64px;
+  }
+  .story__name {
+    font-size: 28px;
   }
   .story__desc {
-    font-size: 19px;
+    font-size: 17px;
+  }
+  .chip {
+    padding: 6px 11px;
+    font-size: 14px;
+  }
+
+  /* Generic sections */
+  .section {
+    padding: 48px 14px 56px;
+  }
+  .milestone {
+    padding: 24px;
   }
   .stack__card {
     position: relative;
     top: auto;
     min-height: 0;
+    padding: 24px 20px;
+    gap: 18px;
+    border-radius: 24px;
   }
   .stack__bullets {
-    font-size: 17px;
+    padding-left: 18px;
+    font-size: 16px;
+    gap: 10px;
   }
-}
+  .earlier {
+    padding: 8px 12px 14px;
+    border-radius: 24px;
+  }
+  .earlier__company {
+    font-size: 20px;
+  }
 
-/* ---------- Reduced motion ---------- */
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
+  /* Contact */
+  .contact__inner {
+    padding: 72px 14px 40px;
+    gap: 24px;
   }
-  *,
-  *::before,
-  *::after {
-    animation: none !important;
-    transition: none !important;
+  .contact__card {
+    padding: 22px 18px;
+  }
+  .contact__details {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .contact__details a {
+    overflow-wrap: anywhere;
+  }
+
+  /* Footer */
+  .footer-scene {
+    min-height: 0;
+    padding: 64px 14px 20px;
+  }
+  .footer-scene__panel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 22px 20px;
+    gap: 22px 16px;
+  }
+  .footer-scene__brand,
+  .footer-scene__panel > .footer-scene__col:nth-child(3) {
+    grid-column: 1 / -1;
+  }
+  .footer-scene__panel > .footer-scene__col:nth-child(3) {
+    order: 3;
+  }
+  .footer-scene__col a {
+    overflow-wrap: anywhere;
+  }
+  .footer-scene__sun,
+  .footer-scene__orbit {
+    width: 760px;
+    height: 760px;
+    margin-left: -380px;
+    bottom: -460px;
+  }
+  .footer-scene__planet {
+    transform: translate(-50%, -50%) rotate(var(--a)) translateY(-430px) rotate(calc(var(--a) * -1));
   }
 }
 
@@ -1341,5 +1491,18 @@ h3,
   .chip {
     padding: 6px 11px;
     font-size: 14px;
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
   }
 }

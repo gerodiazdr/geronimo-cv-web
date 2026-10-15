@@ -69,8 +69,9 @@ export function Hero({ c }: { c: Content }) {
 
     const fly = reduce ? 0 : ease(clamp01(p / 0.8));
     const portal = reduce ? (p > 0.3 ? 1 : 0) : ease(clamp01((p - 0.12) / 0.62));
-    // Portal radius: big enough to hold the hero copy; on phones it covers the whole stage.
-    const r0 = vw < 700 ? Math.hypot(vw, pin) * 0.6 : Math.min(400, vw * 0.3, pin * 0.46);
+    // Portal radius: big enough to hold the hero copy.
+    // Phones: a circle wider than the screen, so the copy fits and the shapes show above and below it.
+    const r0 = vw < 700 ? Math.max(240, vw * 0.64) : Math.min(400, vw * 0.3, pin * 0.46);
     const rMax = Math.hypot(vw, pin) * 0.62 + 40;
     const R = lerp(r0, rMax, portal);
     const inner = clamp01((p - 0.62) / 0.2);
