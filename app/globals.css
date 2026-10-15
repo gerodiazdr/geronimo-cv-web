@@ -752,20 +752,22 @@ h3,
   background-clip: text;
   color: transparent;
 }
+/* All panels share one grid cell, so the stack is as tall as the tallest panel:
+   nothing (e.g. a long "Used at" list) can spill outside the card. */
 .story__panels {
   flex: 999 1 520px;
   min-width: 0;
   position: relative;
-  height: 470px;
+  display: grid;
 }
 .story__panel {
-  position: absolute;
-  inset: 0;
+  grid-area: 1 / 1;
+  position: relative;
   border-radius: 28px;
-  padding: 40px;
+  padding: 36px 40px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
   opacity: 0;
   will-change: opacity, transform;
 }
@@ -1281,6 +1283,7 @@ h3,
     gap: 16px;
   }
   .story__panel {
+    grid-area: auto;
     position: relative;
     inset: auto;
     opacity: 1;
@@ -1309,5 +1312,34 @@ h3,
   *::after {
     animation: none !important;
     transition: none !important;
+  }
+}
+
+/* Short desktop screens: tighten the pinned system scene so the tallest panel fits */
+@media (min-width: 761px) and (max-height: 820px) {
+  .story__inner {
+    padding: 84px 24px 24px;
+    gap: 32px;
+  }
+  .story__panel {
+    padding: 28px 32px;
+    gap: 14px;
+  }
+  .story__shape svg {
+    width: 92px;
+    height: 92px;
+  }
+  .story__name {
+    font-size: clamp(30px, 3vw, 42px);
+  }
+  .story__desc {
+    font-size: 19px;
+  }
+  .story__stages {
+    gap: 10px;
+  }
+  .chip {
+    padding: 6px 11px;
+    font-size: 14px;
   }
 }
