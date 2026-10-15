@@ -1,4 +1,5 @@
 // All copy and data for the site lives here, in English and Spanish. Edit this file to update the CV website.
+// Spanish copy keeps "brand" and "growth" in English on purpose (industry vocabulary).
 
 export const LANGS = ["en", "es"] as const;
 export type Lang = (typeof LANGS)[number];
@@ -10,7 +11,7 @@ export function isLang(value: string): value is Lang {
 
 export const CONTACT = {
   name: "Gerónimo Díaz De Rosa",
-  role: "Head of Marketing & Sales",
+  shortName: "Gerónimo",
   email: "gerodiazdr@gmail.com",
   phone: "+54 11 4190 3865",
   phoneHref: "tel:+541141903865",
@@ -29,41 +30,38 @@ export const CV_FILES: Record<Lang, string> = {
 export type ShapeKind = "diamond" | "quarter" | "tri" | "sq" | "circ";
 export type StageId = "position" | "create" | "grow" | "build" | "automate";
 
-export type Stage = {
-  id: StageId;
-  n: string;
-  verb: string;
-  name: string;
-  shape: ShapeKind;
-  desc: string;
-  tools: string[];
-};
-
-export type Role = {
+export type Stage = { id: StageId; n: string; verb: string; name: string; shape: ShapeKind; desc: string; tools: string[] };
+export type Role = { id: string; company: string; role: string; dates: string; year: string; stages: StageId[]; bullets: string[] };
+export type Fact = { label: string; value: string };
+export type Metric = { value: number; prefix: string; suffix: string; text: string; source: string };
+export type CaseStudy = {
   id: string;
-  company: string;
-  role: string;
-  dates: string;
-  year: string;
-  stages: StageId[];
-  bullets: string[];
+  visual: "timeline" | "web";
+  tag: string;
+  title: string;
+  one: string;
+  context: string;
+  did: string[];
+  results: string[];
+  labels: Record<string, string>;
 };
-
-export type Milestone = { from: number; to: number; suffix: string; text: string; source: string };
+export type AiFlow = { nodes: [string, string, string][]; log: string[] };
 
 export type UIStrings = {
-  langName: string;
   nav: {
     system: string;
+    work: string;
     experience: string;
     contact: string;
     download: string;
+    language: string;
   };
   hero: {
     pill: string;
     lead: string;
     email: string;
     download: string;
+    orCopy: string;
     kicker: string;
     inner1: string;
     inner2: string;
@@ -71,42 +69,58 @@ export type UIStrings = {
   };
   statement: {
     label: string;
-    system: string;
   };
   story: {
     title: string;
     usedAt: string;
     tools: string;
   };
-  milestones: {
+  results: {
     title: string;
+    sub: string;
+    layers: string;
+  };
+  work: {
+    title: string;
+    sub: string;
+    read: string;
+    close: string;
+    context: string;
+    did: string;
+    results: string;
+    dialog: string;
+  };
+  ai: {
+    title: string;
+    sub: string;
+    logLabel: string;
   };
   experience: {
     title: string;
+    sub: string;
+    group: string;
+    lanesProducts: string;
+    lanesServices: string;
     earlier: string;
   };
-  contact: {
+  exit: {
+    kicker: string;
     title: string;
-    label: string;
     copy: string;
     copied: string;
     copyFail: string;
-    copiedSr: string;
     email: string;
     download: string;
     altCv: string;
-    location: string;
   };
   footer: {
     tagline: string;
     navigate: string;
     contact: string;
-    cv: string;
-    cvEn: string;
-    cvEs: string;
-    top: string;
-    language: string;
-    rights: string;
+    colophon: string;
+    built: string;
+    type: string;
+    legal: string;
   };
 };
 
@@ -114,129 +128,198 @@ export type Content = {
   lang: Lang;
   ui: UIStrings;
   statement: string;
+  facts: Fact[];
   stages: Stage[];
   roles: Role[];
-  milestones: Milestone[];
+  metrics: Metric[];
+  cases: CaseStudy[];
+  ai: AiFlow;
 };
 
-// Spanish copy keeps "brand" and "growth" in English on purpose (industry vocabulary).
 const UI: Record<Lang, UIStrings> = {
   "en": {
-    "langName": "English",
     "nav": {
       "system": "System",
+      "work": "Work",
       "experience": "Experience",
       "contact": "Contact",
-      "download": "Download CV"
+      "download": "Download CV",
+      "language": "Language"
     },
     "hero": {
       "pill": "Head of Marketing & Sales · Brand & Growth",
       "lead": "I position B2B brands, give them a place in the market and build the system that makes them grow.",
       "email": "Email me",
       "download": "Download CV",
+      "orCopy": "or copy",
       "kicker": "Position · Create · Grow · Build · Automate",
       "inner1": "From brand to growth.",
       "inner2": "One system.",
       "cue": "Scroll to enter"
     },
     "statement": {
-      "label": "What I do",
-      "system": "The system"
+      "label": "What I do"
     },
     "story": {
       "title": "From brand to growth",
       "usedAt": "Used at",
       "tools": "tools"
     },
-    "milestones": {
-      "title": "Milestones"
+    "results": {
+      "title": "From first touch to revenue",
+      "sub": "Every stage of the system filters and compounds. This is where it shows up in numbers.",
+      "layers": "Brand|Content|Leads|Pipeline|Revenue"
+    },
+    "work": {
+      "title": "Selected work",
+      "sub": "Two projects, end to end.",
+      "read": "Read the case",
+      "close": "Close",
+      "context": "Context",
+      "did": "What I did",
+      "results": "Results",
+      "dialog": "Case study"
+    },
+    "ai": {
+      "title": "AI that does the GTM grunt work",
+      "sub": "An example of the workflows I build with N8N, LLM APIs and Claude. Scroll to run it.",
+      "logLabel": "Run log · illustrative example"
     },
     "experience": {
       "title": "Experience",
+      "sub": "Two lanes, one group: Ingenii builds products, Tekne delivers services.",
+      "group": "Same group · since 2025",
+      "lanesProducts": "products",
+      "lanesServices": "services",
       "earlier": "Earlier"
     },
-    "contact": {
+    "exit": {
+      "kicker": "Exit through the portal",
       "title": "Let’s build your next launch.",
-      "label": "Get in touch",
       "copy": "Copy email",
       "copied": "Copied",
       "copyFail": "Select to copy",
-      "copiedSr": "Email copied to clipboard",
       "email": "Email me",
       "download": "Download CV",
-      "altCv": "CV en español (PDF)",
-      "location": "Buenos Aires · Remote"
+      "altCv": "CV en español (PDF)"
     },
     "footer": {
       "tagline": "Brand, content and growth, built as one system.",
       "navigate": "Navigate",
       "contact": "Contact",
-      "cv": "CV",
-      "cvEn": "English (PDF)",
-      "cvEs": "Español (PDF)",
-      "top": "Back to top",
-      "language": "Language",
-      "rights": "Built in Buenos Aires."
+      "colophon": "Colophon",
+      "built": "Built with Next.js, Claude Code and Vercel.",
+      "type": "Set in Bricolage Grotesque, Geist and DM Mono.",
+      "legal": "Buenos Aires"
     }
   },
   "es": {
-    "langName": "Español",
     "nav": {
       "system": "Sistema",
+      "work": "Trabajo",
       "experience": "Experiencia",
       "contact": "Contacto",
-      "download": "Descargar CV"
+      "download": "Descargar CV",
+      "language": "Idioma"
     },
     "hero": {
       "pill": "Head of Marketing & Sales · Brand & Growth",
       "lead": "Posiciono brands B2B, les doy un lugar en el mercado y construyo el sistema de growth que las impulsa.",
       "email": "Escribime",
       "download": "Descargar CV",
+      "orCopy": "o copiá",
       "kicker": "Posicionamiento · Contenido · Growth · Producto · Automatización",
       "inner1": "De brand a growth.",
       "inner2": "Un solo sistema.",
       "cue": "Deslizá para entrar"
     },
     "statement": {
-      "label": "Qué hago",
-      "system": "El sistema"
+      "label": "Qué hago"
     },
     "story": {
       "title": "De brand a growth",
       "usedAt": "Lo apliqué en",
       "tools": "herramientas"
     },
-    "milestones": {
-      "title": "Hitos"
+    "results": {
+      "title": "Del primer contacto a los ingresos",
+      "sub": "Cada etapa del sistema filtra y potencia la siguiente. Acá se ve en números.",
+      "layers": "Brand|Contenido|Leads|Pipeline|Ingresos"
+    },
+    "work": {
+      "title": "Trabajo seleccionado",
+      "sub": "Dos proyectos, de punta a punta.",
+      "read": "Ver el caso",
+      "close": "Cerrar",
+      "context": "Contexto",
+      "did": "Qué hice",
+      "results": "Resultados",
+      "dialog": "Caso"
+    },
+    "ai": {
+      "title": "IA que hace el trabajo pesado del GTM",
+      "sub": "Un ejemplo de los workflows que armo con N8N, APIs de LLM y Claude. Deslizá para correrlo.",
+      "logLabel": "Registro · ejemplo ilustrativo"
     },
     "experience": {
       "title": "Experiencia",
+      "sub": "Dos carriles, un mismo grupo: Ingenii desarrolla productos y Tekne brinda servicios.",
+      "group": "Mismo grupo · desde 2025",
+      "lanesProducts": "productos",
+      "lanesServices": "servicios",
       "earlier": "Anteriores"
     },
-    "contact": {
+    "exit": {
+      "kicker": "Salida por el portal",
       "title": "Construyamos tu próximo lanzamiento.",
-      "label": "Contacto",
       "copy": "Copiar email",
       "copied": "Copiado",
       "copyFail": "Seleccioná para copiar",
-      "copiedSr": "Email copiado al portapapeles",
       "email": "Escribime",
       "download": "Descargar CV",
-      "altCv": "CV in English (PDF)",
-      "location": "Buenos Aires · Remoto"
+      "altCv": "CV in English (PDF)"
     },
     "footer": {
       "tagline": "Brand, contenido y growth, construidos como un solo sistema.",
       "navigate": "Navegar",
       "contact": "Contacto",
-      "cv": "CV",
-      "cvEn": "English (PDF)",
-      "cvEs": "Español (PDF)",
-      "top": "Volver arriba",
-      "language": "Idioma",
-      "rights": "Hecho en Buenos Aires."
+      "colophon": "Colofón",
+      "built": "Hecho con Next.js, Claude Code y Vercel.",
+      "type": "Tipografías: Bricolage Grotesque, Geist y DM Mono.",
+      "legal": "Buenos Aires"
     }
   }
+};
+
+const FACTS: Record<Lang, Fact[]> = {
+  "en": [
+    {
+      "label": "Based",
+      "value": "Buenos Aires · UTC−3, overlaps US Eastern"
+    },
+    {
+      "label": "Languages",
+      "value": "English C1–C2 · Spanish native"
+    },
+    {
+      "label": "Open to",
+      "value": "Head of Marketing / Growth · Remote"
+    }
+  ],
+  "es": [
+    {
+      "label": "Base",
+      "value": "Buenos Aires · UTC−3, superpuesto con el este de EE.UU."
+    },
+    {
+      "label": "Idiomas",
+      "value": "Inglés C1–C2 · Español nativo"
+    },
+    {
+      "label": "Abierto a",
+      "value": "Head of Marketing / Growth · Remoto"
+    }
+  ]
 };
 
 const STAGES: Record<Lang, Stage[]> = {
@@ -281,7 +364,7 @@ const STAGES: Record<Lang, Stage[]> = {
     "tools": [
       "GTM strategy & launches",
       "Paid search & social",
-      "SEO / AEO",
+      "SEO / GEO",
       "CRO & A/B testing",
       "Outbound & partnerships"
     ]
@@ -358,7 +441,7 @@ const STAGES: Record<Lang, Stage[]> = {
     "tools": [
       "Estrategia GTM y lanzamientos",
       "Paid search y social",
-      "SEO / AEO",
+      "SEO / GEO",
       "CRO y A/B testing",
       "Outbound y alianzas"
     ]
@@ -412,7 +495,7 @@ const ROLES: Record<Lang, Role[]> = {
     ],
     "bullets": [
       "Led positioning and GTM for 4 products launched from zero, as the main owner of strategy and execution.",
-      "Own revenue and pipeline targets across LinkedIn, Google and email campaigns.",
+      "Own revenue and pipeline targets across Meta, LinkedIn, Google and email campaigns, driving +20 sales meetings a week.",
       "Opened new acquisition channels through strategic commercial partnerships.",
       "Build AI workflows that automate research, outreach and data enrichment across the GTM."
     ]
@@ -431,7 +514,7 @@ const ROLES: Record<Lang, Role[]> = {
     "bullets": [
       "Lead full-funnel B2B growth for a U.S.-based data company: paid acquisition, A/B testing and CRO.",
       "Implemented CRM automations and dashboards tracking CAC, LTV and conversion by stage.",
-      "Designed and built web products: the bootcamp platform and the corporate site redesign."
+      "Designed and built web products: the bootcamp platform (Mercado Pago payments, +50 paying students) and the corporate site redesign."
     ]
   },
   {
@@ -546,7 +629,7 @@ const ROLES: Record<Lang, Role[]> = {
     ],
     "bullets": [
       "Lideré el posicionamiento y el GTM de 4 productos lanzados desde cero, como responsable de estrategia y ejecución.",
-      "Responsable de los objetivos de revenue y pipeline con campañas en LinkedIn, Google y email.",
+      "Responsable de los objetivos de revenue y pipeline con campañas en Meta, LinkedIn, Google y email: +20 reuniones de ventas por semana.",
       "Abrí nuevos canales de adquisición mediante alianzas comerciales estratégicas.",
       "Construyo workflows con IA que automatizan research, outreach y enriquecimiento de datos en todo el GTM."
     ]
@@ -565,7 +648,7 @@ const ROLES: Record<Lang, Role[]> = {
     "bullets": [
       "Lidero el growth B2B full-funnel de una empresa de datos de EE.UU.: adquisición paga, A/B testing y CRO.",
       "Implementé automatizaciones de CRM y dashboards de CAC, LTV y conversión por etapa.",
-      "Diseñé y desarrollé productos web: la plataforma del bootcamp y el rediseño del sitio corporativo."
+      "Diseñé y desarrollé productos web: la plataforma del bootcamp (pagos con Mercado Pago, +50 alumnos pagos) y el rediseño del sitio corporativo."
     ]
   },
   {
@@ -672,53 +755,295 @@ const STATEMENT: Record<Lang, string> = {
   "es": "Posiciono brands, creo el contenido que les gana un lugar en el mercado y construyo el sistema de growth que las impulsa."
 };
 
-const MILESTONES: Record<Lang, Milestone[]> = {
+// Metrics shown in the "From first touch to revenue" funnel. Keep them defensible: you will be asked how each was measured.
+const METRICS: Record<Lang, Metric[]> = {
   "en": [
     {
-      "from": 0,
-      "to": 4,
-      "suffix": "",
-      "text": "Products launched to market from zero, as GTM lead",
+      "value": 200,
+      "prefix": "+$",
+      "suffix": "K",
+      "text": "Pipeline generated across the group",
+      "source": "Ingenii + Tekne · since 2025"
+    },
+    {
+      "value": 35,
+      "prefix": "−",
+      "suffix": "%",
+      "text": "CAC reduction through A/B-tested campaigns",
       "source": "Ingenii"
     },
     {
-      "from": 0,
-      "to": 40,
-      "suffix": "K+",
-      "text": "Organic community built from zero with content, in 3 years",
-      "source": "Hilton Pilar"
+      "value": 20,
+      "prefix": "+",
+      "suffix": "",
+      "text": "Sales meetings booked per week",
+      "source": "Ingenii"
     },
     {
-      "from": 2000,
-      "to": 2020,
+      "value": 4,
+      "prefix": "",
       "suffix": "",
-      "text": "Founded and ran a growth-focused digital agency",
-      "source": "SM Agency for Brands"
+      "text": "Products launched to market from zero",
+      "source": "Ingenii"
+    },
+    {
+      "value": 50,
+      "prefix": "+",
+      "suffix": "",
+      "text": "Paying students at the bootcamp launch",
+      "source": "Tekne"
+    },
+    {
+      "value": 40,
+      "prefix": "",
+      "suffix": "K+",
+      "text": "Organic community built with content",
+      "source": "Hilton Pilar"
     }
   ],
   "es": [
     {
-      "from": 0,
-      "to": 4,
-      "suffix": "",
-      "text": "Productos lanzados al mercado desde cero, como líder de GTM",
+      "value": 200,
+      "prefix": "+$",
+      "suffix": "K",
+      "text": "Pipeline generado en el grupo",
+      "source": "Ingenii + Tekne · desde 2025"
+    },
+    {
+      "value": 35,
+      "prefix": "−",
+      "suffix": "%",
+      "text": "Reducción de CAC con campañas testeadas A/B",
       "source": "Ingenii"
     },
     {
-      "from": 0,
-      "to": 40,
-      "suffix": "K+",
-      "text": "Comunidad orgánica construida desde cero con contenido, en 3 años",
-      "source": "Hilton Pilar"
+      "value": 20,
+      "prefix": "+",
+      "suffix": "",
+      "text": "Reuniones de ventas por semana",
+      "source": "Ingenii"
     },
     {
-      "from": 2000,
-      "to": 2020,
+      "value": 4,
+      "prefix": "",
       "suffix": "",
-      "text": "Fundé y dirigí una agencia digital enfocada en growth",
-      "source": "SM Agency for Brands"
+      "text": "Productos lanzados al mercado desde cero",
+      "source": "Ingenii"
+    },
+    {
+      "value": 50,
+      "prefix": "+",
+      "suffix": "",
+      "text": "Alumnos pagos en el lanzamiento del bootcamp",
+      "source": "Tekne"
+    },
+    {
+      "value": 40,
+      "prefix": "",
+      "suffix": "K+",
+      "text": "Comunidad orgánica construida con contenido",
+      "source": "Hilton Pilar"
     }
   ]
+};
+
+const CASES: Record<Lang, CaseStudy[]> = {
+  "en": [
+    {
+      "id": "products",
+      "visual": "timeline",
+      "tag": "Ingenii · Position + Grow",
+      "title": "Taking 4 products from zero to market",
+      "one": "Positioning, launch campaigns and fast iteration for the group's product company. +20 sales meetings a week.",
+      "context": "Ingenii is the product company of the group: it builds software products and takes them to market. Each launch needed a position, a message and a pipeline from day one.",
+      "did": [
+        "Defined positioning and messaging for each product",
+        "Ran paid media on Meta, LinkedIn and Google, plus email",
+        "A/B tested messages, audiences and landing pages",
+        "Iterated fast on 2 products to fit industry needs",
+        "Built AI workflows for research, outreach and enrichment"
+      ],
+      "results": [
+        "4 products taken from zero to market",
+        "2 products iterated fast to fit their industry",
+        "+20 sales meetings booked per week",
+        "−35% CAC through continuous A/B testing"
+      ],
+      "labels": {
+        "axis": "0|MVP|Launch|Market",
+        "product": "Product",
+        "iterate": "↻ iterate"
+      }
+    },
+    {
+      "id": "platforms",
+      "visual": "web",
+      "tag": "Tekne · Build + Automate",
+      "title": "A bootcamp platform and a site built to be found",
+      "one": "Bootcamp platform with Mercado Pago payments and a corporate site rebuilt for SEO and GEO.",
+      "context": "Tekne is the group's consultancy. It needed a platform to sell and run its data bootcamp, and a corporate site that search engines and AI assistants can find.",
+      "did": [
+        "Designed and built the bootcamp platform (Next.js)",
+        "Integrated Mercado Pago for payments",
+        "Restructured navigation and indexation for SEO and GEO",
+        "Built an optimized workflow to publish blog content"
+      ],
+      "results": [
+        "Bootcamp launched with payments: +50 paying students",
+        "Better navigation and site indexation for SEO and GEO",
+        "A repeatable content workflow for the blog"
+      ],
+      "labels": {
+        "appUrl": "bootcamp · platform",
+        "siteUrl": "corporate site",
+        "pay": "Pay with Mercado Pago",
+        "students": "+50 students",
+        "geo": "Indexed · cited in AI answers"
+      }
+    }
+  ],
+  "es": [
+    {
+      "id": "products",
+      "visual": "timeline",
+      "tag": "Ingenii · Posicionamiento + Growth",
+      "title": "Llevar 4 productos de cero al mercado",
+      "one": "Posicionamiento, campañas de lanzamiento e iteración rápida para la empresa de productos del grupo. +20 reuniones de ventas por semana.",
+      "context": "Ingenii es la empresa de productos del grupo: desarrolla software y lo lleva al mercado. Cada lanzamiento necesitaba un posicionamiento, un mensaje y un pipeline desde el día uno.",
+      "did": [
+        "Definí el posicionamiento y los mensajes de cada producto",
+        "Corrí paid media en Meta, LinkedIn y Google, más email",
+        "Testeé A/B mensajes, audiencias y landing pages",
+        "Iteré rápido 2 productos para ajustarlos a su industria",
+        "Armé workflows con IA para research, outreach y enriquecimiento"
+      ],
+      "results": [
+        "4 productos llevados de cero al mercado",
+        "2 productos iterados para ajustarse a su industria",
+        "+20 reuniones de ventas por semana",
+        "−35% de CAC con A/B testing continuo"
+      ],
+      "labels": {
+        "axis": "0|MVP|Lanzamiento|Mercado",
+        "product": "Producto",
+        "iterate": "↻ iterar"
+      }
+    },
+    {
+      "id": "platforms",
+      "visual": "web",
+      "tag": "Tekne · Producto + Automatización",
+      "title": "Una plataforma de bootcamp y un sitio hecho para ser encontrado",
+      "one": "Plataforma de bootcamp con pagos por Mercado Pago y un sitio corporativo rehecho para SEO y GEO.",
+      "context": "Tekne es la consultora del grupo. Necesitaba una plataforma para vender y dictar su bootcamp de datos, y un sitio corporativo que encuentren tanto los buscadores como los asistentes de IA.",
+      "did": [
+        "Diseñé y desarrollé la plataforma del bootcamp (Next.js)",
+        "Integré Mercado Pago para los pagos",
+        "Reestructuré la navegación y la indexación para SEO y GEO",
+        "Armé un workflow optimizado para publicar contenido en el blog"
+      ],
+      "results": [
+        "Bootcamp lanzado con pagos: +50 alumnos pagos",
+        "Mejor navegación e indexación del sitio para SEO y GEO",
+        "Un workflow repetible de contenido para el blog"
+      ],
+      "labels": {
+        "appUrl": "bootcamp · plataforma",
+        "siteUrl": "sitio corporativo",
+        "pay": "Pagar con Mercado Pago",
+        "students": "+50 alumnos",
+        "geo": "Indexado · citado en respuestas de IA"
+      }
+    }
+  ]
+};
+
+// Illustrative example of an AI GTM workflow (labelled as such on the page).
+const AI: Record<Lang, AiFlow> = {
+  "en": {
+    "nodes": [
+      [
+        "Trigger",
+        "New target account",
+        "HubSpot list"
+      ],
+      [
+        "Research",
+        "Company + buying signals",
+        "LLM · web"
+      ],
+      [
+        "Enrich",
+        "Contacts and firmographics",
+        "Apollo"
+      ],
+      [
+        "Personalize",
+        "Hook and angle per account",
+        "Claude"
+      ],
+      [
+        "Outreach",
+        "Email + LinkedIn sequence",
+        "N8N"
+      ],
+      [
+        "Learn",
+        "Deal, notes and next step",
+        "HubSpot"
+      ]
+    ],
+    "log": [
+      "→ Acme Data · 120 employees · Series A · reporting stack in Excel",
+      "→ Signal: hiring 2 data analysts · new VP Finance",
+      "→ 3 contacts found · VP Finance, Head of Data, CFO",
+      "→ Hook: “Your board deck in 3 clicks, not 3 days”",
+      "→ Sequence queued: email day 1 · LinkedIn day 3 · email day 6",
+      "→ Deal created in HubSpot · next step: discovery call"
+    ]
+  },
+  "es": {
+    "nodes": [
+      [
+        "Disparador",
+        "Nueva cuenta objetivo",
+        "Lista de HubSpot"
+      ],
+      [
+        "Research",
+        "Empresa y señales de compra",
+        "LLM · web"
+      ],
+      [
+        "Enriquecer",
+        "Contactos y firmografía",
+        "Apollo"
+      ],
+      [
+        "Personalizar",
+        "Gancho y ángulo por cuenta",
+        "Claude"
+      ],
+      [
+        "Outreach",
+        "Secuencia de email + LinkedIn",
+        "N8N"
+      ],
+      [
+        "Aprender",
+        "Deal, notas y próximo paso",
+        "HubSpot"
+      ]
+    ],
+    "log": [
+      "→ Acme Data · 120 empleados · Serie A · reporting en Excel",
+      "→ Señal: busca 2 data analysts · nuevo VP de Finanzas",
+      "→ 3 contactos encontrados · VP de Finanzas, Head of Data, CFO",
+      "→ Gancho: “Tu reporte de directorio en 3 clics, no en 3 días”",
+      "→ Secuencia programada: email día 1 · LinkedIn día 3 · email día 6",
+      "→ Deal creado en HubSpot · próximo paso: llamada de discovery"
+    ]
+  }
 };
 
 export function getContent(lang: Lang): Content {
@@ -726,9 +1051,12 @@ export function getContent(lang: Lang): Content {
     lang,
     ui: UI[lang],
     statement: STATEMENT[lang],
+    facts: FACTS[lang],
     stages: STAGES[lang],
     roles: ROLES[lang],
-    milestones: MILESTONES[lang],
+    metrics: METRICS[lang],
+    cases: CASES[lang],
+    ai: AI[lang],
   };
 }
 
