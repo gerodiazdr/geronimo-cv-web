@@ -104,4 +104,9 @@ Para probar cómo se ve el link, después del deploy pegá la URL en [LinkedIn P
 
 - **Movimiento reducido:** con "reducir movimiento" activado no hay zoom, órbitas ni manchas animadas; solo fundidos.
 - **Transparencia reducida:** con "reducir transparencia" activado, el vidrio pasa a fondo sólido.
-- **Celular:** el gradiente cubre todo el hero, el sistema se muestra como tarjetas apiladas y el footer se reacomoda en una columna.
+- **Celular** (hasta 760 px de ancho):
+  - El header queda en una sola fila: "Gerónimo", EN/ES y un botón "CV".
+  - El portal es un círculo más ancho que la pantalla, con las formas orbitando arriba y abajo. Se oculta la capa más lejana para que ande fluido.
+  - El sistema se muestra como tarjetas apiladas, sin scroll fijado.
+  - El footer pasa a 2 columnas.
+- **Notebooks bajas** (hasta 820 px de alto): la escena del sistema se compacta para que la tarjeta entre completa.
