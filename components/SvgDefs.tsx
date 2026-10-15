@@ -21,6 +21,18 @@ export function SvgDefs() {
           <stop offset="0.5" stopColor="#FF5E8A" />
           <stop offset="1" stopColor="#E0338E" />
         </linearGradient>
+        {/* Single-axis twins for strokes whose bounding box is flat on one axis: a diagonal
+            objectBoundingBox vector would collapse to one end stop across the stroke width. */}
+        <linearGradient id="gHotV" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#FF8A4C" />
+          <stop offset="0.5" stopColor="#FF5E8A" />
+          <stop offset="1" stopColor="#E0338E" />
+        </linearGradient>
+        <linearGradient id="gHotH" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="#FF8A4C" />
+          <stop offset="0.5" stopColor="#FF5E8A" />
+          <stop offset="1" stopColor="#E0338E" />
+        </linearGradient>
       </defs>
     </svg>
   );

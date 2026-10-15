@@ -36,7 +36,7 @@ export function Work({ c }: { c: Content }) {
 export function CaseOverlay({ c }: { c: Content }) {
   const t = c.ui.work;
   return (
-    <div className="g-case-overlay" role="dialog" aria-modal="true" aria-label={t.dialog}>
+    <div className="g-case-overlay" role="dialog" aria-modal="true" aria-label={t.dialog} tabIndex={-1}>
       <button type="button" className="g-case-close" data-action="close-case" aria-label={t.close}>
         ×
       </button>
