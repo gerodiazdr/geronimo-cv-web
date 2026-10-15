@@ -107,6 +107,6 @@ Para probar cómo se ve el link, después del deploy pegá la URL en [LinkedIn P
 - **Celular** (hasta 760 px de ancho):
   - El header queda en una sola fila: "Gerónimo", EN/ES y un botón "CV".
   - El portal es un círculo más ancho que la pantalla, con las formas orbitando arriba y abajo. Se oculta la capa más lejana para que ande fluido.
-  - El sistema se muestra como tarjetas apiladas, sin scroll fijado.
+  - El sistema se muestra como tarjetas que se apilan al scrollear: la siguiente sube y tapa a la anterior, que se achica y se desvanece. La forma de cada tarjeta gira y crece a medida que la tarjeta entra. Con "reducir movimiento" activado queda como una lista común.
   - El footer pasa a 2 columnas.
 - **Notebooks bajas** (hasta 820 px de alto): la escena del sistema se compacta para que la tarjeta entre completa.

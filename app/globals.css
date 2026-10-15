@@ -1360,15 +1360,23 @@ h3,
     font-weight: 800;
     letter-spacing: -0.04em;
   }
+  /* Cards stack while scrolling (sticky works on flex items, not on grid items) */
   .story__panels {
-    gap: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
   }
   .story__panel {
+    position: sticky;
+    top: 76px;
     grid-area: auto;
     opacity: 1;
     padding: 24px 20px;
     gap: 14px;
     border-radius: 24px;
+    transform-origin: 50% 0%;
+    /* more solid glass so the card being covered doesn't show through */
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.74));
   }
   .story__panel-head {
     gap: 16px;
@@ -1491,6 +1499,14 @@ h3,
   .chip {
     padding: 6px 11px;
     font-size: 14px;
+  }
+}
+
+/* Phones with reduced motion: no stacking, plain list */
+@media (max-width: 760px) and (prefers-reduced-motion: reduce) {
+  .story__panel {
+    position: relative;
+    top: auto;
   }
 }
 

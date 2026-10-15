@@ -13,15 +13,51 @@ export function SystemStory({ c }: { c: Content }) {
   const t = c.ui.story;
   const ref = useRef<HTMLElement>(null);
   const panels = useRef<(HTMLElement | null)[]>([]);
+  const shapes = useRef<(HTMLSpanElement | null)[]>([]);
   const [active, setActive] = useState(0);
   const activeRef = useRef(0);
   const reduce = usePrefersReducedMotion();
+
+  /**
+   * Phones: the cards stack (CSS sticky). While the next card slides over the current one,
+   * the current one shrinks and fades away; each card's shape turns and grows as the card
+   * enters, and keeps turning while it is covered.
+   */
+  const animateMobile = () => {
+    const vh = window.innerHeight;
+    const rects = panels.current.map((p) => (p ? p.getBoundingClientRect() : null));
+    panels.current.forEach((panel, i) => {
+      const r = rects[i];
+      if (!panel || !r) return;
+      panel.removeAttribute("aria-hidden");
+      panel.style.pointerEvents = "";
+      const shape = shapes.current[i];
+      if (reduce) {
+        panel.style.opacity = "";
+        panel.style.transform = "";
+        if (shape) shape.style.transform = "";
+        return;
+      }
+      const next = rects[i + 1];
+      const enter = clamp01((vh - r.top) / (vh * 0.75));
+      const cover = next ? clamp01((r.bottom - next.top) / r.height) : 0;
+      panel.style.opacity = clamp01(1 - 1.35 * cover).toFixed(3);
+      panel.style.transform = `translateY(${(-20 * cover).toFixed(1)}px) scale(${(1 - 0.08 * cover).toFixed(4)})`;
+      if (shape) {
+        shape.style.transform = `rotate(${((enter + cover) * 180 - 180).toFixed(1)}deg) scale(${(0.55 + 0.45 * enter).toFixed(3)})`;
+      }
+    });
+  };
 
   useScrollFrame(() => {
     const el = ref.current;
     if (!el) return;
     const mobile = window.innerWidth < MOBILE;
-    const ps = mobile ? 0 : pinnedProgress(el, pinHeight());
+    if (mobile) {
+      animateMobile();
+      return;
+    }
+    const ps = pinnedProgress(el, pinHeight());
     el.style.setProperty("--ps", ps.toFixed(4));
 
     const n = stages.length;
@@ -33,13 +69,8 @@ export function SystemStory({ c }: { c: Content }) {
 
     panels.current.forEach((panel, i) => {
       if (!panel) return;
-      if (mobile) {
-        panel.style.opacity = "";
-        panel.style.transform = "";
-        panel.style.pointerEvents = "";
-        panel.removeAttribute("aria-hidden");
-        return;
-      }
+      const shape = shapes.current[i];
+      if (shape) shape.style.transform = "";
       const x = ps * n - (i + 0.5);
       let o = clamp01((0.62 - Math.abs(x)) / 0.24);
       if (i === 0 && x < 0) o = 1;
@@ -85,7 +116,12 @@ export function SystemStory({ c }: { c: Content }) {
                 className="story__panel glass"
               >
                 <div className="story__panel-head">
-                  <span className="story__shape">
+                  <span
+                    className="story__shape"
+                    ref={(node) => {
+                      shapes.current[i] = node;
+                    }}
+                  >
                     <Shape kind={st.shape} size={128} colors={["#FFC29E", "#F7A1CF", "#B9A2FF"]} />
                   </span>
                   <div>
