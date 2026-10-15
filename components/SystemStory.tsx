@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { companiesForStage, type Content } from "@/lib/content";
 import { clamp01, pinHeight, pinnedProgress, usePrefersReducedMotion, useScrollFrame } from "@/lib/motion";
 import { Shape } from "./Shape";
@@ -41,7 +41,9 @@ export function SystemStory({ c }: { c: Content }) {
       const next = rects[i + 1];
       const enter = clamp01((vh - r.top) / (vh * 0.75));
       const cover = next ? clamp01((r.bottom - next.top) / r.height) : 0;
-      panel.style.opacity = clamp01(1 - 1.35 * cover).toFixed(3);
+      // Fade over the whole cover range: a steeper curve empties the card while part of it
+      // is still uncovered, leaving a band of bare background inside the stack.
+      panel.style.opacity = clamp01(1 - cover).toFixed(3);
       panel.style.transform = `translateY(${(-20 * cover).toFixed(1)}px) scale(${(1 - 0.08 * cover).toFixed(4)})`;
       if (shape) {
         shape.style.transform = `rotate(${((enter + cover) * 180 - 180).toFixed(1)}deg) scale(${(0.55 + 0.45 * enter).toFixed(3)})`;
@@ -49,10 +51,12 @@ export function SystemStory({ c }: { c: Content }) {
     });
   };
 
-  useScrollFrame(() => {
+  const frame = () => {
     const el = ref.current;
     if (!el) return;
-    const mobile = window.innerWidth < MOBILE;
+    // <= because the CSS phone branch is `max-width: MOBILE`, which includes MOBILE itself:
+    // with `<` the stacked phone layout would run under the desktop crossfade at exactly that width.
+    const mobile = window.innerWidth <= MOBILE;
     if (mobile) {
       animateMobile();
       return;
@@ -81,7 +85,17 @@ export function SystemStory({ c }: { c: Content }) {
       if (o > 0.5) panel.removeAttribute("aria-hidden");
       else panel.setAttribute("aria-hidden", "true");
     });
-  });
+  };
+
+  useScrollFrame(frame);
+
+  // usePrefersReducedMotion resolves after mount, so the one frame useScrollFrame runs on mount
+  // already applied the animated transforms. Re-run once it flips, or a visitor who lands on
+  // /#system with reduced motion and never scrolls keeps the rotated, scaled-down shapes.
+  useEffect(() => {
+    frame();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reduce]);
 
   return (
     <section id="system" ref={ref} className="story" aria-labelledby="system-title">

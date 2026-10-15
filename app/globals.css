@@ -1502,6 +1502,37 @@ h3,
   }
 }
 
+/* Very narrow phones (320px, e.g. iPhone SE 1st gen): a pinned card only gets
+   100svh - 76px, and at this width the taller stages overflow that, so their bottom chips
+   could never be scrolled into view. Compact the card, same idea as the short-desktop block. */
+@media (max-width: 340px) {
+  .story__panel {
+    padding: 18px 16px;
+    gap: 10px;
+    border-radius: 20px;
+  }
+  .story__panel-head {
+    gap: 12px;
+  }
+  .story__shape svg {
+    width: 48px;
+    height: 48px;
+  }
+  .story__name {
+    font-size: 22px;
+  }
+  .story__desc {
+    font-size: 15px;
+  }
+  .chip {
+    padding: 5px 9px;
+    font-size: 13px;
+  }
+  .story__used {
+    gap: 8px;
+  }
+}
+
 /* Phones with reduced motion: no stacking, plain list */
 @media (max-width: 760px) and (prefers-reduced-motion: reduce) {
   .story__panel {
