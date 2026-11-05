@@ -4,6 +4,38 @@ import type { CaseStudy } from "@/lib/content";
 export function CaseVisual({ cs, big = false }: { cs: CaseStudy; big?: boolean }) {
   const cls = `g-case__media g-cm${big ? " g-case__media--big" : ""}`;
   const l = cs.labels;
+  if (cs.visual === "office" && cs.office) {
+    // The card loops a short clip (the engine plays it only while on screen); the case plays the full demo.
+    const v = cs.office.video;
+    return (
+      <div className={`${cls} g-case__media--office`} aria-hidden={big ? undefined : true}>
+        <div className="g-blob g-blob--1" />
+        <div className="g-blob g-blob--3" />
+        <div className="g-oo-win">
+          <div className="g-oo-win__bar">
+            <i />
+            <i />
+            <i />
+            <span>{l.window}</span>
+            {big && <span>{l.demo}</span>}
+          </div>
+          {big ? (
+            <video
+              className="g-oo-video g-oo-video--full"
+              src={v.full}
+              poster={v.fullPoster}
+              controls
+              playsInline
+              preload="none"
+              aria-label={l.videoLabel}
+            />
+          ) : (
+            <video className="g-oo-video" src={v.loop} poster={v.loopPoster} muted loop playsInline preload="none" data-loop="" />
+          )}
+        </div>
+      </div>
+    );
+  }
   if (cs.visual === "timeline") {
     const axis = l.axis.split("|");
     const rows = [false, true, false, true];

@@ -36,7 +36,7 @@ export type Fact = { label: string; value: string };
 export type Metric = { value: number; prefix: string; suffix: string; text: string; source: string };
 export type CaseStudy = {
   id: string;
-  visual: "timeline" | "web";
+  visual: "timeline" | "web" | "office";
   tag: string;
   title: string;
   one: string;
@@ -44,6 +44,34 @@ export type CaseStudy = {
   did: string[];
   results: string[];
   labels: Record<string, string>;
+  office?: OfficeDetail;
+};
+
+// Outbound Office: the featured case, with its video, how the Content floor works and what it ships.
+export type OfficeRole = { name: string; kind: "agent" | "robot" | "person"; does: string; gives: string };
+export type OfficeRoom = { name: string; roles: OfficeRole[]; note?: string };
+export type OfficeChannel = { name: string; type: string; searchable: boolean; format: string; traits: string[] };
+export type OfficeDetail = {
+  video: { loop: string; loopPoster: string; full: string; fullPoster: string };
+  stats: Fact[];
+  sources: string[];
+  channels: string[];
+  caption: string;
+  lede: string;
+  flow: {
+    title: string;
+    sub: string;
+    legend: { agent: string; robot: string; gives: string; givesSample: string };
+    sourcesTitle: string;
+    sourceGroups: { name: string; feeds: string; items: string[] }[];
+    baseline: string;
+    signals: string;
+    rooms: OfficeRoom[];
+    rulesLabel: string;
+    rules: string[];
+    sales: string;
+  };
+  output: { title: string; sub: string; channels: OfficeChannel[]; commonLabel: string; common: string[]; note: string };
 };
 export type AiFlow = { nodes: [string, string, string][]; log: string[] };
 
@@ -172,7 +200,7 @@ const UI: Record<Lang, UIStrings> = {
     },
     "work": {
       "title": "Selected work",
-      "sub": "Two projects, end to end.",
+      "sub": "Three projects, end to end.",
       "read": "Read the case",
       "close": "Close",
       "context": "Context",
@@ -248,7 +276,7 @@ const UI: Record<Lang, UIStrings> = {
     },
     "work": {
       "title": "Trabajo seleccionado",
-      "sub": "Dos proyectos, de punta a punta.",
+      "sub": "Tres proyectos, de punta a punta.",
       "read": "Ver el caso",
       "close": "Cerrar",
       "context": "Contexto",
@@ -847,8 +875,145 @@ const METRICS: Record<Lang, Metric[]> = {
   ]
 };
 
+// Outbound Office videos, in /public/cases/outbound-office: a 15 s loop for the card and the 41 s demo for the case.
+const OFFICE_VIDEO = {
+  loop: "/cases/outbound-office/loop.mp4",
+  loopPoster: "/cases/outbound-office/loop.jpg",
+  full: "/cases/outbound-office/demo.mp4",
+  fullPoster: "/cases/outbound-office/demo.jpg",
+};
+
 const CASES: Record<Lang, CaseStudy[]> = {
   "en": [
+    {
+      "id": "office",
+      "visual": "office",
+      "tag": "Tekne · Automate + Grow",
+      "title": "An office of AI agents you can watch",
+      "one": "AI agents with their own desks that run outbound campaigns and deliver a content brief every week. Nothing ships without a person's OK.",
+      "context": "Tekne wanted AI agents on two jobs: running outbound campaigns on Apollo and researching what to talk about each week. A log tells you something failed; an office shows you who is waiting on whom.",
+      "did": [
+        "Designed the office as floors, Sales and Content, on one engine",
+        "Split the work into 12 single-task stations: 8 AI agents and 4 robots",
+        "Set the rules: every number sourced, nothing generic, a person approves",
+        "Built the pixel-art scene that mirrors the real state of the database"
+      ],
+      "results": [
+        "2 floors running: Sales and Content",
+        "1 brief a week, with ideas per vertical and their sources",
+        "From idea to a working office in 2 weeks"
+      ],
+      "labels": {
+        "window": "outbound office · Content floor",
+        "demo": "demo · 41 s",
+        "watch": "Video · 41 s",
+        "videoLabel": "Video of the Content floor at work",
+        "sources": "Sources",
+        "channels": "Ships to"
+      },
+      "office": {
+        "video": OFFICE_VIDEO,
+        "stats": [
+          { "value": "12", "label": "stations: 8 AI agents and 4 robots" },
+          { "value": "2", "label": "floors: Sales and Content" },
+          { "value": "2 wks", "label": "from idea to a working office" }
+        ],
+        "sources": ["Search Console", "Google Trends", "Hacker News", "Reddit", "GitHub", "RSS"],
+        "channels": ["Blog", "LinkedIn", "Instagram", "Newsletter"],
+        "caption": "It opens with the editor-in-chief waiting for you to approve the brand map. Then the listening robots bring in 32 signals, the Radar weighs two spikes and the idea “AI agents for SMBs” moves from Strategy to Development, on its way to Review.",
+        "lede": "A building where every agent has a desk, every task is a folder and no decision ships without a person's OK.",
+        "flow": {
+          "title": "How it works",
+          "sub": "Each station does one thing and hands the folder to the next. The only way out is your desk.",
+          "legend": { "agent": "AI agent", "robot": "robot: code, no language model", "gives": "what it hands to the next station", "givesSample": "→ output" },
+          "sourcesTitle": "Sources · where the signals come from",
+          "sourceGroups": [
+            { "name": "Searches", "feeds": "→ Search tracker", "items": ["Search Console", "Google Trends", "Google and YouTube autocomplete"] },
+            { "name": "Ideas and trends", "feeds": "→ Trend tracker", "items": ["Hacker News", "Reddit", "GitHub", "RSS"] }
+          ],
+          "baseline": "They compare the last 7 days against a 28-day baseline and flag the spikes.",
+          "signals": "signals",
+          "rooms": [
+            {
+              "name": "Listening",
+              "roles": [
+                { "name": "Search tracker", "kind": "robot", "does": "Runs each seed through the search sources.", "gives": "Signals" },
+                { "name": "Trend tracker", "kind": "robot", "does": "Reads the trend sources and flags spikes against the baseline.", "gives": "Signals and spike alerts" }
+              ],
+              "note": "runs on its own, once a day"
+            },
+            {
+              "name": "Analysis",
+              "roles": [
+                { "name": "Radar", "kind": "agent", "does": "Labels each trend as a wave, a current or seasonal, and spots topics that rise in English before they reach Spanish.", "gives": "Trends" },
+                { "name": "Cartographer", "kind": "agent", "does": "Normalizes keywords, tags intent, audience and vertical, and groups them into clusters.", "gives": "Keywords and clusters" }
+              ]
+            },
+            {
+              "name": "Archive",
+              "roles": [
+                { "name": "Archivist", "kind": "robot", "does": "Keeps what was published and the memory of ideas. Flags duplicates, topics in cooldown and pages ranking 8 to 20.", "gives": "Flagged candidates" }
+              ]
+            },
+            {
+              "name": "Strategy",
+              "roles": [
+                { "name": "Strategist", "kind": "agent", "does": "Turns each candidate into an idea: thesis, bridge, original angle and evidence.", "gives": "Idea core" },
+                { "name": "Router", "kind": "agent", "does": "Sets the channel, format and voice, and whether the idea is searchable or shareable.", "gives": "Idea with a destination" },
+                { "name": "SERP researcher", "kind": "agent", "does": "Searchable ideas only: checks what ranks today and whether the search can be won.", "gives": "Feasibility verdict" }
+              ]
+            },
+            {
+              "name": "Development",
+              "roles": [
+                { "name": "Briefer", "kind": "agent", "does": "Writes the short development: hook, structure, anchor, CTA and spin-offs. It doesn't write the piece.", "gives": "Developed idea" }
+              ]
+            },
+            {
+              "name": "Review",
+              "roles": [
+                { "name": "Editorial reviewer", "kind": "agent", "does": "Runs the checklist: evidence, bridge, original angle, nothing generic and no banned topics.", "gives": "Idea ready or dropped" }
+              ],
+              "note": "↺ sends it back to Strategy up to 2 times; on the third, drops it with a reason"
+            },
+            {
+              "name": "Production",
+              "roles": [
+                { "name": "Compiler", "kind": "robot", "does": "Builds the brief from the database, scores it and validates the evidence.", "gives": "Brief" }
+              ]
+            },
+            {
+              "name": "Editorial direction",
+              "roles": [
+                { "name": "Editor-in-chief", "kind": "agent", "does": "Drafts the brand map you approve and writes the brief's executive summary.", "gives": "Brand map and summary" }
+              ]
+            },
+            {
+              "name": "Your desk",
+              "roles": [
+                { "name": "A person on the team", "kind": "person", "does": "You approve, reject with a reason, change the channel or hand the idea to Sales.", "gives": "Decisions" }
+              ]
+            }
+          ],
+          "rulesLabel": "Rules",
+          "rules": ["Every number has a source", "If another company could publish it, it goes back", "No signal, no ideas", "A person approves"],
+          "sales": "The Sales floor follows the same pattern with its own stations: Research, Signals, Prospecting, Writer and Reviewer, on Apollo."
+        },
+        "output": {
+          "title": "What ships",
+          "sub": "Every week a brief ships with ideas per vertical: data, development, careers, best practices and tech trends. The Router gives each idea a channel, a format and a voice, and the idea arrives ready for that channel.",
+          "channels": [
+            { "name": "Blog", "type": "searchable", "searchable": true, "format": "Guide or opinion piece", "traits": ["Main and secondary keywords, with their search intent", "SERP verdict: what ranks today, what it lacks and whether it can be won", "Structure in H2s"] },
+            { "name": "LinkedIn", "type": "shareable", "searchable": false, "format": "Post or carousel", "traits": ["Travels through the conversation: never marked searchable", "If it's a carousel, the structure goes in slides", "If it takes a stance, someone credible on the topic signs it, with 3 questions for the signer"] },
+            { "name": "Instagram", "type": "shareable", "searchable": false, "format": "Carousel or short video", "traits": ["Carousel: the structure goes in slides", "Short video: the structure goes in moments", "Can ship as a spin-off of another idea, like a blog guide"] },
+            { "name": "Newsletter", "type": "shareable", "searchable": false, "format": "Note for “Data & IA, sin ruido”", "traits": ["Travels through the community, not search", "Serves the community goal: new subscribers every month", "Ships on Substack"] }
+          ],
+          "commonLabel": "Every output carries",
+          "common": ["Thesis", "Why now: 1 to 3 data points with source and date", "Bridge to what the company does", "Original angle", "Hook", "Structure in 3 to 5 points", "CTA by goal", "1 to 3 spin-off pieces", "Expiry date or evergreen"],
+          "note": "The office ships the idea ready for its channel. Writing the full piece comes next, in the Writing room."
+        }
+      }
+    },
     {
       "id": "products",
       "visual": "timeline",
@@ -903,6 +1068,135 @@ const CASES: Record<Lang, CaseStudy[]> = {
     }
   ],
   "es": [
+    {
+      "id": "office",
+      "visual": "office",
+      "tag": "Tekne · Automatización + Growth",
+      "title": "Una oficina de agentes de IA que se puede mirar",
+      "one": "Agentes con escritorio propio que arman campañas de outbound y un brief de contenido por semana. Nada sale sin el OK de una persona.",
+      "context": "Tekne quería sumar agentes de IA a dos trabajos: correr campañas de outbound sobre Apollo e investigar de qué hablar cada semana. Un log te dice que algo falló; una oficina te muestra quién está esperando a quién.",
+      "did": [
+        "Diseñé la oficina por pisos, Ventas y Contenido, sobre un mismo motor",
+        "Partí el trabajo en 12 puestos de una sola tarea: 8 agentes de IA y 4 robots",
+        "Definí las reglas: cada dato con fuente, nada genérico, aprueba una persona",
+        "Armé la escena en pixel art que refleja el estado real de la base"
+      ],
+      "results": [
+        "2 pisos funcionando: Ventas y Contenido",
+        "1 brief por semana, con ideas por vertical y su fuente",
+        "De la idea a la oficina andando en 2 semanas"
+      ],
+      "labels": {
+        "window": "outbound office · piso Contenido",
+        "demo": "demo · 41 s",
+        "watch": "Video · 41 s",
+        "videoLabel": "Video del piso Contenido trabajando",
+        "sources": "Fuentes",
+        "channels": "Sale para"
+      },
+      "office": {
+        "video": OFFICE_VIDEO,
+        "stats": [
+          { "value": "12", "label": "puestos: 8 agentes de IA y 4 robots" },
+          { "value": "2", "label": "pisos: Ventas y Contenido" },
+          { "value": "2 sem.", "label": "de la idea a la oficina andando" }
+        ],
+        "sources": ["Search Console", "Google Trends", "Hacker News", "Reddit", "GitHub", "RSS"],
+        "channels": ["Blog", "LinkedIn", "Instagram", "Newsletter"],
+        "caption": "Arranca con la Editora en jefe esperando que apruebes el brand map. Después los robots de Escucha traen 32 señales, el Radar evalúa dos picos y la idea «agentes de IA en pymes» avanza de Estrategia a Desarrollo, rumbo a Revisión.",
+        "lede": "Un edificio donde cada agente tiene escritorio, cada tarea es una carpeta y ninguna decisión sale sin el OK de una persona.",
+        "flow": {
+          "title": "Cómo funciona",
+          "sub": "Cada puesto hace una sola cosa y le pasa la carpeta al siguiente. La única salida es tu escritorio.",
+          "legend": { "agent": "agente de IA", "robot": "robot: código sin modelo de lenguaje", "gives": "lo que pasa al puesto siguiente", "givesSample": "→ entrega" },
+          "sourcesTitle": "Fuentes · de dónde salen las señales",
+          "sourceGroups": [
+            { "name": "Búsquedas", "feeds": "→ Rastreador de búsquedas", "items": ["Search Console", "Google Trends", "Autocompletado de Google y YouTube"] },
+            { "name": "Ideas y tendencias", "feeds": "→ Rastreador de tendencias", "items": ["Hacker News", "Reddit", "GitHub", "RSS"] }
+          ],
+          "baseline": "Comparan los últimos 7 días contra una base de 28 y marcan los picos.",
+          "signals": "señales",
+          "rooms": [
+            {
+              "name": "Escucha",
+              "roles": [
+                { "name": "Rastreador de búsquedas", "kind": "robot", "does": "Corre cada semilla por las fuentes de búsqueda.", "gives": "Señales" },
+                { "name": "Rastreador de tendencias", "kind": "robot", "does": "Lee las fuentes de tendencias y marca los picos contra la línea de base.", "gives": "Señales y alertas de pico" }
+              ],
+              "note": "corre sola, 1 vez por día"
+            },
+            {
+              "name": "Análisis",
+              "roles": [
+                { "name": "Radar", "kind": "agent", "does": "Clasifica cada tendencia como ola, corriente o estacional, y detecta temas que suben en inglés antes de llegar al español.", "gives": "Tendencias" },
+                { "name": "Cartógrafa", "kind": "agent", "does": "Normaliza keywords, les asigna intención, audiencia y vertical, y las agrupa en clusters.", "gives": "Keywords y clusters" }
+              ]
+            },
+            {
+              "name": "Archivo",
+              "roles": [
+                { "name": "Archivista", "kind": "robot", "does": "Guarda lo publicado y la memoria de ideas. Marca duplicados, temas en cooldown y páginas en posición 8 a 20.", "gives": "Candidatas marcadas" }
+              ]
+            },
+            {
+              "name": "Estrategia",
+              "roles": [
+                { "name": "Estratega", "kind": "agent", "does": "Convierte cada candidata en una idea: tesis, puente, aporte propio y evidencia.", "gives": "Núcleo de la idea" },
+                { "name": "Ruteadora", "kind": "agent", "does": "Define canal, formato, voz y si la idea es buscable o compartible.", "gives": "Idea con destino" },
+                { "name": "Investigadora de SERP", "kind": "agent", "does": "Sólo en ideas buscables: mira qué rankea hoy y si la búsqueda se puede ganar.", "gives": "Veredicto de factibilidad" }
+              ]
+            },
+            {
+              "name": "Desarrollo",
+              "roles": [
+                { "name": "Briefista", "kind": "agent", "does": "Escribe el desarrollo breve: gancho, estructura, anclaje, CTA y derivadas. No redacta la pieza.", "gives": "Idea desarrollada" }
+              ]
+            },
+            {
+              "name": "Revisión",
+              "roles": [
+                { "name": "Revisor editorial", "kind": "agent", "does": "Aplica el checklist: evidencia, puente, aporte propio, que no sea genérica y que no toque temas vetados.", "gives": "Idea lista o descartada" }
+              ],
+              "note": "↺ devuelve a Estrategia hasta 2 veces; a la tercera, la descarta con motivo"
+            },
+            {
+              "name": "Producción",
+              "roles": [
+                { "name": "Compilador", "kind": "robot", "does": "Arma el brief desde la base, calcula los puntajes y valida la evidencia.", "gives": "Brief" }
+              ]
+            },
+            {
+              "name": "Dirección editorial",
+              "roles": [
+                { "name": "Editora en jefe", "kind": "agent", "does": "Arma el brand map que aprobás y escribe el resumen ejecutivo del brief.", "gives": "Brand map y resumen" }
+              ]
+            },
+            {
+              "name": "Tu escritorio",
+              "roles": [
+                { "name": "Una persona del equipo", "kind": "person", "does": "Aprobás, rechazás con motivo, cambiás el canal o pasás la idea a Ventas.", "gives": "Decisiones" }
+              ]
+            }
+          ],
+          "rulesLabel": "Reglas",
+          "rules": ["Cada dato tiene su fuente", "Si otra empresa podría publicarlo, vuelve", "Sin señal, no hay ideas", "Aprueba una persona"],
+          "sales": "El piso Ventas sigue el mismo esquema con sus propios puestos: Research, Signals, Prospecting, Redactora y Revisor, sobre Apollo."
+        },
+        "output": {
+          "title": "Qué sale",
+          "sub": "Cada semana sale un brief con ideas por vertical: data, desarrollo, carrera, buenas prácticas y tendencias tech. La Ruteadora le da a cada idea un canal, un formato y una voz, y la idea llega preparada para ese canal.",
+          "channels": [
+            { "name": "Blog", "type": "buscable", "searchable": true, "format": "Guía o artículo de opinión", "traits": ["Keyword principal y secundarias, con su intención de búsqueda", "Veredicto de SERP: qué rankea hoy, qué le falta y si se puede ganar", "Estructura en H2"] },
+            { "name": "LinkedIn", "type": "compartible", "searchable": false, "format": "Post o carrusel", "traits": ["Circula en la conversación: nunca se marca buscable", "Si es carrusel, la estructura va en slides", "Si es de postura, la firma una persona creíble en el tema y trae 3 preguntas para quien firma"] },
+            { "name": "Instagram", "type": "compartible", "searchable": false, "format": "Carrusel o video corto", "traits": ["Carrusel: la estructura va en slides", "Video corto: la estructura va en momentos", "Puede salir como derivada de otra idea, por ejemplo de una guía del blog"] },
+            { "name": "Newsletter", "type": "compartible", "searchable": false, "format": "Nota para «Data & IA, sin ruido»", "traits": ["Circula en la comunidad, no en el buscador", "Apunta al objetivo comunidad: sumar suscriptores todos los meses", "Sale en Substack"] }
+          ],
+          "commonLabel": "Toda salida lleva",
+          "common": ["Tesis", "Por qué ahora: 1 a 3 datos con fuente y fecha", "Puente con lo que hace la empresa", "Aporte propio", "Gancho", "Estructura de 3 a 5 puntos", "CTA según el objetivo", "1 a 3 piezas derivadas", "Vencimiento o evergreen"],
+          "note": "La oficina entrega la idea preparada para su canal. Escribir la pieza completa es lo próximo: la sala de Redacción."
+        }
+      }
+    },
     {
       "id": "products",
       "visual": "timeline",

@@ -14,13 +14,14 @@ lib/engine.js           — motor de animación (JS puro, sin librerías)
 components/             — una pieza por sección (Hero, SystemStory, Results, Work, AiFlow, Experience, Exit…)
 public/cv/              — los dos PDFs del CV
 public/og/              — imágenes para compartir (og-en.png, og-es.png)
+public/cases/           — los videos del caso Outbound Office
 ```
 
 ## Editar contenido
 
 Todo el texto está en `lib/content.ts`, con un bloque `en` y otro `es` para cada parte:
 - `METRICS`: los números del funnel.
-- `CASES`: los dos casos.
+- `CASES`: los tres casos. Outbound Office suma `office`: los videos, cómo funciona el piso Contenido y qué sale para cada canal.
 - `AI`: la demo del workflow.
 - `ROLES`: la experiencia.
 
@@ -34,7 +35,7 @@ En español, "brand" y "growth" quedan en inglés a propósito: no uses "marca",
 2. **Qué hago:** frase que se ilumina palabra por palabra, más datos prácticos (base y zona horaria, idiomas, qué roles busco).
 3. **Sistema (fijado):** las 5 etapas avanzan con el scroll. En celular son tarjetas que se apilan; la de abajo se achica y se desvanece.
 4. **Resultados:** funnel de Brand → Revenue con formas que caen y métricas que cuentan hacia arriba.
-5. **Casos:** tarjetas con ilustraciones propias (timeline de producto y dos plataformas web) que se abren a pantalla completa.
+5. **Casos:** Outbound Office va primero y a todo el ancho, con el video de la oficina en loop. Los otros dos tienen ilustraciones propias (timeline de producto y dos plataformas web). Todos se abren a pantalla completa; Outbound Office muestra ahí el demo entero, cómo funciona el piso Contenido y qué sale para cada canal.
 6. **Demo de IA:** nodos que se encienden en secuencia, un pulso que viaja entre ellos y un registro de ejemplo.
 7. **Experiencia:** timeline que se dibuja con el scroll. Ingenii (productos) y Tekne (servicios), del mismo grupo, van en carriles paralelos.
 8. **Salida por el portal:** el círculo vuelve a crecer y el contacto queda adentro.
@@ -46,7 +47,7 @@ En español, "brand" y "growth" quedan en inglés a propósito: no uses "marca",
 - Las órbitas se pausan fuera de pantalla.
 
 **Accesibilidad:**
-- Con "reducir movimiento" no hay animaciones, scroll suave ni apilado, y todo se muestra estático.
+- Con "reducir movimiento" no hay animaciones, scroll suave ni apilado, y todo se muestra estático (el video de la tarjeta queda en su póster).
 - Con "reducir transparencia", el vidrio se vuelve sólido.
 
 ## Ajustes rápidos del motor (`lib/engine.js`)
@@ -62,6 +63,10 @@ Van en `public/cv/` con estos nombres exactos (Vercel distingue mayúsculas):
 - `Geronimo-Diaz-De-Rosa-CV-ES.pdf`
 
 `npm run check:cv` falla si falta alguno.
+
+## Videos de Outbound Office
+
+Van en `public/cases/outbound-office/`: `loop.mp4` (15 s, sin audio, para la tarjeta) y `demo.mp4` (41 s, para el caso), cada uno con su póster `.jpg`. El loop sólo corre mientras la tarjeta está en pantalla; el demo no se descarga hasta que alguien le da play.
 
 ## Comandos
 
