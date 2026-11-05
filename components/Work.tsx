@@ -1,5 +1,6 @@
 import type { Content } from "@/lib/content";
 import { CaseVisual } from "./CaseVisual";
+import { OfficeFlow, OfficeHighlights, OfficeOutput } from "./OfficeCase";
 
 export function Work({ c }: { c: Content }) {
   const t = c.ui.work;
@@ -14,15 +15,27 @@ export function Work({ c }: { c: Content }) {
         </div>
         <div className="g-cases">
           {c.cases.map((cs, i) => (
-            <article key={cs.id} className="g-case glass" data-index={i}>
+            <article key={cs.id} className={cs.office ? "g-case g-case--featured glass" : "g-case glass"} data-index={i}>
               <CaseVisual cs={cs} />
               <div className="g-case__body">
                 <span className="g-mono">{cs.tag}</span>
                 <h3 className="g-case__title">{cs.title}</h3>
                 <p>{cs.one}</p>
-                <button type="button" className="g-btn g-btn--dark g-btn--sm" data-action="open-case" data-index={i}>
-                  {t.read}
-                </button>
+                {cs.office && <OfficeHighlights office={cs.office} labels={cs.labels} />}
+                <div className="g-case__actions">
+                  <button type="button" className="g-btn g-btn--dark g-btn--sm" data-action="open-case" data-index={i}>
+                    {t.read}
+                  </button>
+                  {cs.office && (
+                    <span className="g-case__watch">
+                      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M10 8l6 4-6 4z" />
+                      </svg>
+                      {cs.labels.watch}
+                    </span>
+                  )}
+                </div>
               </div>
             </article>
           ))}
@@ -43,9 +56,17 @@ export function CaseOverlay({ c }: { c: Content }) {
       {c.cases.map((cs, i) => (
         <article key={cs.id} className="g-case-full" data-case={i} hidden>
           <CaseVisual cs={cs} big />
+          {cs.office && <p className="g-case-full__caption">{cs.office.caption}</p>}
           <div className="g-case-full__body">
             <span className="g-mono">{cs.tag}</span>
             <h2 className="g-case-full__title">{cs.title}</h2>
+            {cs.office && (
+              <>
+                <p className="g-case-full__lede">{cs.office.lede}</p>
+                <OfficeFlow flow={cs.office.flow} />
+                <OfficeOutput output={cs.office.output} />
+              </>
+            )}
             <div className="g-case-full__cols">
               <div>
                 <h4>{t.context}</h4>
